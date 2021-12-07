@@ -1,0 +1,37 @@
+# даны две таблицы 1 surfaces: surface_code (varchar); surface_name (varchar) 2 Logs: querry_date (datetime); user_id (int); text (varchar); surface_code (int); intent (varchar); correct_intent (boolean)
+
+# посчитать на последнюю актуальную дату количество запросов в каждой поверхности и вывести в формате от большего к меньшему: surface; count
+
+-- create table Surface (
+-- surface_code varchar,
+-- surface_name varchar
+-- );
+-- Insert into Surface Values
+-- ('12', 'Misha'),
+-- ('123', 'Nikita'),
+-- ('1234', 'Sasha'),
+-- ('12345', 'Serega');
+
+-- create table Logs(
+-- querry_date datetime,
+-- user_id int,
+-- text varchar, 
+-- surface_code int, 
+-- intent varchar, 
+-- correct_intent boolean
+-- );
+
+-- Insert into Logs Values
+-- ('2021-12-05','1', 'vtrwev', 12, 'isha', True),
+-- ('2021-12-03', '2', 'vtwrv', 123, 'ikita', False),
+-- ('2021-12-04', '3', 'vvtrwe', 1234, 'asha', False),
+-- ('2021-12-01', '3', 'hgefsd', 12345, 'erega', True);
+
+-- where querry_date=(select max(t2.querry_date) from t2);
+select  surface_name as surface, count(text) as count from(select * from Surface) t1
+inner join (select cast(surface_code as varchar) as surface_code, * 
+from Logs) t2
+on t1.surface_code=t2.surface_code
+where querry_date=(select max(querry_date) from Logs)
+group by surface_name
+order by count desc;
